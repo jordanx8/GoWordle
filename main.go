@@ -57,6 +57,7 @@ func checkWord(guess string, answer string) [5]int {
 	notinword := 0
 	wrongspot := 1
 	correct := 2
+	fmt.Println(guess, answer)
 	for i := 0; i < 5; i++ {
 		if string(guessbyte[i]) == string(answerbyte[i]) {
 			//correct spot, correct letter
@@ -69,7 +70,11 @@ func checkWord(guess string, answer string) [5]int {
 			if amtOfALetter(answerbyte, guessbyte[i]) > 0 {
 				//wrong spot, correct letter
 				guessColors[i] = wrongspot
-				answerbyte[i] = byte(0)
+				for j, _ := range answerbyte {
+					if string(answerbyte[j]) == string(guessbyte[i]) {
+						answerbyte[j] = byte(0)
+					}
+				}
 			} else {
 				//wrong
 				guessColors[i] = notinword
@@ -80,6 +85,7 @@ func checkWord(guess string, answer string) [5]int {
 }
 
 func main() {
+	won := false
 	var guesses [6]string
 	var lettercolors [6][5]int
 	//store word list into an array
@@ -130,6 +136,7 @@ out:
 					if correct == 5 {
 						fmt.Println()
 						fmt.Println("Correct! It only took you", numberofguesses+1, "guesses.")
+						won = true
 						break out
 					}
 				}
@@ -137,5 +144,7 @@ out:
 			fmt.Println()
 		}
 	}
-
+	if !won {
+		fmt.Printf("You lost! The correct word was %s.\n", answer)
+	}
 }
