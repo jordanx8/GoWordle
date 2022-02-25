@@ -14,6 +14,10 @@ import (
 	"github.com/TwiN/go-color"
 )
 
+//TODO: change these and use two simple global arrays, one with letters and other with their colors
+var allLetters = [26]string{"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M"}
+var allLettersColors []string
+
 func readLines(path string) ([]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -50,6 +54,10 @@ func amtOfALetter(answer []byte, guess byte) int {
 	return amt
 }
 
+func remove(slice []string, s int) []string {
+	return append(slice[:s], slice[s+1:]...)
+}
+
 func checkWord(guess string, answer string) [5]int {
 	var guessColors [5]int
 	guessbyte := []byte(guess)
@@ -75,6 +83,7 @@ func checkWord(guess string, answer string) [5]int {
 						answerbyte[j] = byte(0)
 					}
 				}
+
 			} else {
 				//wrong
 				guessColors[i] = notinword
@@ -101,7 +110,7 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
-out:
+gameloop:
 	for numberofguesses := 0; numberofguesses < 6; numberofguesses++ {
 		//fmt.Println("Answer =", answer)
 		fmt.Println("Make a guess = ")
@@ -137,7 +146,7 @@ out:
 						fmt.Println()
 						fmt.Println("Correct! It only took you", numberofguesses+1, "guesses.")
 						won = true
-						break out
+						break gameloop
 					}
 				}
 			}
